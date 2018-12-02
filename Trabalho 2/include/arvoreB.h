@@ -29,9 +29,9 @@ void ordena_ponteiros(no *pNo, int n, int changes[ORDEM]);
 
 no* atualiza_dados(FILE* arq_base);
 
-void mostraArvore(no* NoAtual);
+void mostraArvore(no* NoAtual, int espaco_inicial);
 
-void imprimeNo(char *nome);
+void imprimeNo(char *nome, int espacos);
 
 
 

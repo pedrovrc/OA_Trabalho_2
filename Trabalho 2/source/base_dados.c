@@ -24,25 +24,32 @@ no* atualiza_dados(FILE* arq_base) {
     	registro[8] = '\0';
     	//printf("%s\n", registro);
 
+        printf("Incluindo registro %s\n\n", registro);
+
     	insere_chave(&raiz, registro);
+        mostraArvore(raiz, 0);
+        printf("\n\n\n\n\n");
     }
     return raiz;
 }
 
-void imprimeNo(char *nome) {
+void imprimeNo(char *nome, int espacos) {
     int i;
+    for (i = 0; i < espacos; i++) {
+        printf("\t");
+    }
     printf("%s\n", nome);
 }
 
-void mostraArvore(no* NoAtual) {
+void mostraArvore(no* NoAtual, int espaco_inicial) {
     int i;
     if (NoAtual == NULL) {
-        //imprimeNo("*");
+        //imprimeNo("*", espaco_inicial+1);
         return;
     }
     for (i = 0; i < NoAtual->qtd_chaves; i++) {
-        mostraArvore(NoAtual->filhos[i]);
-        imprimeNo(NoAtual->chaves[i]);
+        mostraArvore(NoAtual->filhos[i], espaco_inicial+1);
+        imprimeNo(NoAtual->chaves[i], espaco_inicial);
     }
-    mostraArvore(NoAtual->filhos[i]);
+    mostraArvore(NoAtual->filhos[i], espaco_inicial+1);
 }

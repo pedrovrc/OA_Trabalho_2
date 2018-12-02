@@ -79,9 +79,21 @@ void promove (no **raiz, no *pNo, char lista[ORDEM][TAM_CHAVE], int qtd_lista, i
     pNo->qtd_chaves = ORDEM-cont;
     pNovo->qtd_chaves = cont-1;
     
-    pNo->filhos[ORDEM-cont] = (no*)malloc(sizeof(no));
-    pNo->filhos[ORDEM-cont]->filhos[0] = NULL;
-    pNo->filhos[ORDEM-cont]->qtd_chaves = 0;
+/*
+    int nao_eh_folha = 0;
+    for (int i = 0; i <= ORDEM; i++) {
+        if (pNo->filhos[i] != NULL) {
+            nao_eh_folha = 1;
+            break;
+        }
+    }
+
+    if (nao_eh_folha) {
+        pNo->filhos[ORDEM-cont] = (no*)malloc(sizeof(no));
+        pNo->filhos[ORDEM-cont]->filhos[0] = NULL;
+        pNo->filhos[ORDEM-cont]->qtd_chaves = 0;
+    }
+*/
 
     if (pNo->pai == NULL) {
         no *pPai = (no*)malloc(sizeof(no));
@@ -104,9 +116,31 @@ void promove (no **raiz, no *pNo, char lista[ORDEM][TAM_CHAVE], int qtd_lista, i
                 pNo->pai->chaves[pNo->pai->qtd_chaves][i] = elemento_div[i];
             }
 
+            char no_original[TAM_CHAVE];
+            char no_novo[TAM_CHAVE];
+            strcpy(no_original, pNo->pai->filhos[pNo->pai->qtd_chaves]->chaves[0]);
+            strcpy(no_novo, pNovo->chaves[0]);
+
+            no* maior;
+            no* menor;
+
+            int situacao = strcmp(no_original, no_novo);
+
+            if (situacao > 0) {
+                maior = pNo->pai->filhos[pNo->pai->qtd_chaves];
+                menor = pNovo;
+            } else {
+                maior = pNovo;
+                menor = pNo->pai->filhos[pNo->pai->qtd_chaves];
+            }
+
+            pNo->pai->filhos[pNo->pai->qtd_chaves+1] = maior;
+            pNo->pai->filhos[pNo->pai->qtd_chaves] = menor;
+
+            pNovo->pai = pNo->pai;
             pNo->pai->qtd_chaves++;
             insertionSort(pNo->pai->chaves, pNo->pai->qtd_chaves, changes);
-            ordena_ponteiros(pNo->pai, pNo->pai->qtd_chaves, changes);
+            //ordena_ponteiros(pNo->pai, pNo->pai->qtd_chaves, changes);
         } else {
             for (int i = 0; i < pNo->pai->qtd_chaves; i++) {
                 for (int j = 0; j < TAM_CHAVE; j++) {
@@ -116,8 +150,8 @@ void promove (no **raiz, no *pNo, char lista[ORDEM][TAM_CHAVE], int qtd_lista, i
             for (int i = 0; i < TAM_CHAVE; i++) {
                 lista[pNo->pai->qtd_chaves][i] = elemento_div[i];
             }
-            insertionSort(pNo->pai->chaves, pNo->pai->qtd_chaves+1, changes);
-            ordena_ponteiros(pNo->pai, pNo->pai->qtd_chaves, changes);
+            insertionSort(lista, pNo->pai->qtd_chaves+1, changes);
+            //ordena_ponteiros(pNo->pai, pNo->pai->qtd_chaves, changes);
             promove(raiz, pNo->pai, lista, pNo->pai->qtd_chaves+1, changes);
         }
     }
