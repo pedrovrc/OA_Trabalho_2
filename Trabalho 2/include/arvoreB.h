@@ -5,7 +5,7 @@
 
 
 #define ORDEM 4
-#define TAM_CHAVE 10
+#define TAM_CHAVE 9
 
 typedef struct No{
    int qtd_chaves; //Quantidades de chaves contida no nó
@@ -25,7 +25,7 @@ int compara_string(char* string1, char* string2);
 
 void insertionSort(char array[ORDEM][TAM_CHAVE], int n, int changes[ORDEM]);
 
-void ordena_ponteiros(no *pNo, int n, int changes[ORDEM]);
+void ordena_ponteiros(no* pNoPai, int n);
 
 no* atualiza_dados(FILE* arq_base);
 

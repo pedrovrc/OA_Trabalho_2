@@ -20,7 +20,7 @@ int insere_chave (no **raiz, char* chave) {
         }
         pNo->qtd_chaves++;
         insertionSort(pNo->chaves, pNo->qtd_chaves, changes);
-        ordena_ponteiros(pNo, pNo->qtd_chaves, changes);
+        //ordena_ponteiros(pNo, pNo->qtd_chaves, changes);
     } else {
         for (int i = 0; i < pNo->qtd_chaves; i++) {
             for (int j = 0; j < TAM_CHAVE; j++) {    
@@ -33,23 +33,27 @@ int insere_chave (no **raiz, char* chave) {
         }
         pNo->filhos[pNo->qtd_chaves+1] = NULL;
         insertionSort(lista, pNo->qtd_chaves+1, changes); 
-        ordena_ponteiros(pNo, pNo->qtd_chaves, changes);
+        //ordena_ponteiros(pNo, pNo->qtd_chaves, changes);
         promove(raiz, pNo, lista, pNo->qtd_chaves+1, changes);
     }
 }
 
 void promove (no **raiz, no *pNo, char lista[ORDEM][TAM_CHAVE], int qtd_lista, int changes[ORDEM]) {
+
+    // Acha meio
     int meio = ceil(qtd_lista/2);
     if (qtd_lista%2 == 0) {
         meio++;
     }
 
+    // Cria e preenche elemento divisor
     char elemento_div[TAM_CHAVE];
     
     for (int i = 0; i < TAM_CHAVE; i++) {
         elemento_div[i] = lista[meio-1][i];    
     }
 
+    // Cria no irmao e atualiza chaves
     no *pNovo = (no*)malloc(sizeof(no));
 
     for(int i = 0; i < meio-1; i++) { 
@@ -64,6 +68,7 @@ void promove (no **raiz, no *pNo, char lista[ORDEM][TAM_CHAVE], int qtd_lista, i
         }        
     }
 
+    // "Carrega" ponteiros de filhos
     int cont = 0;
     for (int i = 0; i <= qtd_lista; i++) {
         if (meio+i <= qtd_lista) {
@@ -76,25 +81,12 @@ void promove (no **raiz, no *pNo, char lista[ORDEM][TAM_CHAVE], int qtd_lista, i
         pNo->filhos[meio + i] = NULL;
         cont++;
     }
+
+    // Atualiza quantidades
     pNo->qtd_chaves = ORDEM-cont;
     pNovo->qtd_chaves = cont-1;
-    
-/*
-    int nao_eh_folha = 0;
-    for (int i = 0; i <= ORDEM; i++) {
-        if (pNo->filhos[i] != NULL) {
-            nao_eh_folha = 1;
-            break;
-        }
-    }
 
-    if (nao_eh_folha) {
-        pNo->filhos[ORDEM-cont] = (no*)malloc(sizeof(no));
-        pNo->filhos[ORDEM-cont]->filhos[0] = NULL;
-        pNo->filhos[ORDEM-cont]->qtd_chaves = 0;
-    }
-*/
-
+    // Cria novo pai caso nao exista ainda
     if (pNo->pai == NULL) {
         no *pPai = (no*)malloc(sizeof(no));
         *raiz = pPai;
@@ -110,6 +102,8 @@ void promove (no **raiz, no *pNo, char lista[ORDEM][TAM_CHAVE], int qtd_lista, i
         pNo->pai = pPai;
         pPai->qtd_chaves = 1;
     } else {
+
+        // Se tiver espaco, simplesmente insere
         if (pNo->pai->qtd_chaves < ORDEM-1) {
             
             for (int i = 0; i < TAM_CHAVE; i++) {
@@ -139,8 +133,15 @@ void promove (no **raiz, no *pNo, char lista[ORDEM][TAM_CHAVE], int qtd_lista, i
 
             pNovo->pai = pNo->pai;
             pNo->pai->qtd_chaves++;
+
+            // inserir pNovo no array filhos do pai
+            pNo->pai->filhos[pNo->pai->qtd_chaves+1] = pNovo;
+            ordena_ponteiros(pNo->pai, pNo->pai->qtd_chaves+1);
+
             insertionSort(pNo->pai->chaves, pNo->pai->qtd_chaves, changes);
             //ordena_ponteiros(pNo->pai, pNo->pai->qtd_chaves, changes);
+
+        // Se nao tiver espaco, passa elemento divisor para cima e promove    
         } else {
             for (int i = 0; i < pNo->pai->qtd_chaves; i++) {
                 for (int j = 0; j < TAM_CHAVE; j++) {
@@ -152,6 +153,11 @@ void promove (no **raiz, no *pNo, char lista[ORDEM][TAM_CHAVE], int qtd_lista, i
             }
             insertionSort(lista, pNo->pai->qtd_chaves+1, changes);
             //ordena_ponteiros(pNo->pai, pNo->pai->qtd_chaves, changes);
+
+            // inserir pNovo no array filhos do pai
+            pNo->pai->filhos[pNo->pai->qtd_chaves+1] = pNovo;
+            ordena_ponteiros(pNo->pai, ORDEM+1);
+
             promove(raiz, pNo->pai, lista, pNo->pai->qtd_chaves+1, changes);
         }
     }
@@ -205,14 +211,9 @@ void insertionSort(char array[ORDEM][TAM_CHAVE], int n, int changes[ORDEM]) {
         }
         changes[j+1] = chave_changes;
     }
-    /* 
-    for (int i = 0; i < n;i++) {
-        printf("%d ", changes[i]);
-    }
-    printf("\n");
-    */
 }
 
+/*
 void ordena_ponteiros(no *pNo, int n, int changes[ORDEM+1]) {
     int i, j; 
     int chave_changes;
@@ -231,15 +232,29 @@ void ordena_ponteiros(no *pNo, int n, int changes[ORDEM+1]) {
         pNo->filhos[j+1] = aux;
     }
 }
-
-//print array->filhos
-
-/*
-4
-6
-3
-2
-5
-1
 */
 
+void ordena_ponteiros(no* pNoPai, int n) { 
+    for (int i = 0; i < pNoPai->qtd_chaves+1; i++) {
+        printf("%s ", pNoPai->filhos[i]->chaves[0]);
+    }
+    printf("\n");
+
+    int i, j;
+    no* aux;
+    for (i = 1; i < n; i++) {
+        j = i-1; 
+        aux = pNoPai->filhos[i];
+
+        while (j >= 0 && strcmp(pNoPai->filhos[j]->chaves[0], aux->chaves[0]) > 0) { 
+            pNoPai->filhos[j+1] = pNoPai->filhos[j];
+            j = j-1; 
+        }
+        pNoPai->filhos[j+1] = aux;
+    }
+
+    for (int i = 0; i < pNoPai->qtd_chaves+1; i++) {
+        printf("%s ", pNoPai->filhos[i]->chaves[0]);
+    }
+    printf("\n\n\n");
+}

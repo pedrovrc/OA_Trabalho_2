@@ -36,7 +36,7 @@ no* atualiza_dados(FILE* arq_base) {
 void imprimeNo(char *nome, int espacos) {
     int i;
     for (i = 0; i < espacos; i++) {
-        printf("\t");
+        printf("  ");
     }
     printf("%s\n", nome);
 }

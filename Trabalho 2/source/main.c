@@ -7,33 +7,50 @@ void testes() {
     }
     raiz->pai = NULL;
 
-    char *nome = "CCC62364";
+    char *nome = "C";
     insere_chave(&raiz, nome);
 
-    nome = "RRR18375";
+    nome = "D";
     insere_chave(&raiz, nome);
 
-    nome = "OOO99999";
+    nome = "S";
     insere_chave(&raiz, nome);
 
-    nome = "VVV12345";
+    nome = "T";
     insere_chave(&raiz, nome);
 
-    nome = "BBB12345";
+    nome = "A";
     insere_chave(&raiz, nome);
 
-    nome = "AAA12345";
+    nome = "M";
     insere_chave(&raiz, nome);
 
-    nome = "TTT12345";
+    nome = "P";
     insere_chave(&raiz, nome);
 
-    nome = "UUU12345";
+    nome = "I";
     insere_chave(&raiz, nome);
 
-    nome = "XXX12345";
+    nome = "B";
     insere_chave(&raiz, nome);
 
+    nome = "W";
+    insere_chave(&raiz, nome);
+
+    nome = "N";
+    insere_chave(&raiz, nome);
+
+    nome = "G";
+    insere_chave(&raiz, nome);
+
+    nome = "U";
+    insere_chave(&raiz, nome);
+
+    nome = "R";
+    insere_chave(&raiz, nome);
+
+    nome = "K";
+    insere_chave(&raiz, nome);
 
     mostraArvore(raiz, 0);
     return;
